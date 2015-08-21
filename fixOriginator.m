@@ -1,0 +1,9 @@
+function target = fixOriginator(target,ref)
+target.hdr.dime.pixdim = ref.hdr.dime.pixdim;
+target.hdr.dime.scl_slope = ref.hdr.dime.scl_slope;
+target.hdr.dime.xyzt_units = ref.hdr.dime.xyzt_units;
+target.hdr.hist = ref.hdr.hist;
+target.original.hdr.dime.pixdim = ref.original.hdr.dime.pixdim;
+target.original.hdr.dime.scl_slope = ref.original.hdr.dime.scl_slope;
+target.original.hdr.dime.xyzt_units = ref.original.hdr.dime.xyzt_units;
+target.original.hdr.hist = ref.original.hdr.hist;
