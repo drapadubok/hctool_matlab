@@ -111,7 +111,7 @@ end
 % save outputs for picture
 retval.probs = probs;
 retval.weights = weights;
-save(sprintf('%s/within/%s/%s/results.mat',cfg.dataroot,name,cfg.subject),'retval','-v7.3');
+save(sprintf('%s/%s/%s/%s/results.mat',cfg.dataroot,cfg.analysis_type,name,cfg.subject),'retval','-v7.3');
 
 % %% Execute with the best scale, collect accuracy
 % clear preds

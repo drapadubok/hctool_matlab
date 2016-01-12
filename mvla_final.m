@@ -64,7 +64,7 @@ end
 retval.probs = probs;
 retval.weights = weights;
 save(sprintf('%s/within/%s/%s/results.mat',cfg.dataroot,name,cfg.subject),'retval','-v7.3');
-
+exit;
 
 
 

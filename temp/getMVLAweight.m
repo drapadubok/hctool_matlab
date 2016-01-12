@@ -24,8 +24,8 @@ for c = 1:ncond
     % New version
     probvec = probs{c};
     probvec(probvec<=0.5) = 0;
-    % binarize
+    %
     temp = zeros(numel(mask.img),1);
-    temp(midx) = sign(probvec);
+    temp(midx) = probvec;
     impmaps{c} = reshape(temp,x,y,z);
 end

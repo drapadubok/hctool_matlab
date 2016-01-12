@@ -104,5 +104,5 @@ tmsk(midx,:) = temp';
 tmsk = reshape(tmsk,46,55,46,size(temp,1));
 [accuracyAP,resultsAP] = perspective_kNN_classification(tmsk,cfg.K,group);
 save(sprintf('%s/hyper/%s/%s/%s/knnresult_%i.mat',cfg.dataroot,cfg.token,cfg.sender,cfg.receiver,cfg.K),'accuracyAO','resultsAO','accuracyAP','resultsAP','-v7.3');
-
+exit;
 

@@ -75,4 +75,4 @@ end
 retval.probs = probs;
 retval.weights = weights;
 save(sprintf('%s/hyper/%s/%s/%s/results.mat',cfg.dataroot,cfg.token,cfg.sender,cfg.receiver),'retval','-v7.3');
-
+exit;

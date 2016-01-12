@@ -59,22 +59,31 @@ for r = 1:length(preds) % for each scale
     end
     info(r,1) = mean(log(probrightclass));
 end
-%% find best scale, based on mlpp
-bestlambdaidx = find(info==max(info)); % keep the one which has better predictive rate
+%% find best scale, based on rate
+bestlambdaidx = find(rate==max(rate)); 
 if length(bestlambdaidx) > 1 % if a draw
-    bestlambdaidx = find(rate==max(rate)); % best based on accuracy
+    bestlambdaidx = find(info==max(info)); % best based on accuracy
 end
 if length(bestlambdaidx) > 1
     bestlambdaidx = bestlambdaidx(1); % if still a draw, take just the first one
 end
+
+% bestlambdaidx = find(info==max(info)); % keep the one which has better predictive rate
+% if length(bestlambdaidx) > 1 % if a draw
+%     bestlambdaidx = find(rate==max(rate)); % best based on accuracy
+% end
+% if length(bestlambdaidx) > 1
+%     bestlambdaidx = bestlambdaidx(1); % if still a draw, take just the first one
+% end
 % save outputs at this stage
-retval.preds = preds{bestlambdaidx};
-retval.accuracy = max(rate);
-retval.lambda = bestlambdaidx;
+retval.preds = preds;
+retval.accuracy = rate(bestlambdaidx);
+retval.lambda = lambda(bestlambdaidx);
 retval.cls = objs{bestlambdaidx};
 retval.mlpp = info(bestlambdaidx);
 retval.lambdamlpp = info;
 retval.lambdarate = rate;
+retval.lambdaall = lambda;
 %% For pictures
 % Run model with all the data, no CV
 % According to toy example, higher probabilities work towards class 1 vs class 2
@@ -130,7 +139,7 @@ save(sprintf('%s/between/%s/%s/%s/results.mat',cfg.dataroot,cfg.token,cfg.sender
 %     f = objs{r};
 %     probs{r} = 1-normcdf(0,f.Gauss.m(1:end-1),sqrt(f.Gauss.diagC(1:end-1))); % impmap, calculate without crossval
 % end
-
+exit;
 
 
 

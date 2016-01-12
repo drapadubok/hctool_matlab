@@ -13,7 +13,7 @@ if isfield(cfg,'regressor')
     labels = cfg.dL2;
 else
     % If you have labels from within classifier
-    load(sprintf('%s/%s/dL2.mat',cfg.dataroot,cfg.receiver));
+    load(sprintf('%s/%s/%s/dL2.mat',cfg.dataroot,cfg.dsampfolder,cfg.receiver));
     labels = tosave;
 end
 % number of classes
@@ -21,7 +21,7 @@ ncond = cfg.ntask;
 n_per_run = length(labels)/cfg.nruns; 
 %% Load the data
 data_actor = load(sprintf('%s/Tokens/%s/%s_4mm.mat',cfg.dataroot,cfg.token,cfg.sender)); data_actor = data_actor.dO;
-data_observer = load(sprintf('%s/hyper/%s/%s/%s/data_K%i.mat',cfg.dataroot,cfg.token,cfg.sender,cfg.receiver,cfg.K)); data_observer = data_observer.fullmaskprojection;
+data_observer = load(sprintf('%s/%s/%s/%s/%s/data_K%i.mat',cfg.dataroot,cfg.analysis_type,cfg.token,cfg.sender,cfg.receiver,cfg.K)); data_observer = data_observer.fullmaskprojection;
 %% Acquire the best scale in cross-validation framework
 preds = cell(length(lambda),1);
 for cv = 1:cfg.nruns
@@ -98,7 +98,7 @@ end
 % save outputs for picture
 retval.probs = probs;
 retval.weights = weights;
-save(sprintf('%s/hyper/%s/%s/%s/results_%i.mat',cfg.dataroot,cfg.token,cfg.sender,cfg.receiver,cfg.K),'retval','-v7.3');
+save(sprintf('%s/%s/%s/%s/%s/results_%i.mat',cfg.dataroot,cfg.analysis_type,cfg.token,cfg.sender,cfg.receiver,cfg.K),'retval','-v7.3');
 exit;
 
 % %% Execute with the best scale, collect accuracy

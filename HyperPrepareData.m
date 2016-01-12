@@ -25,9 +25,11 @@ end
 % load('/triton/becs/scratch/braindata/shared/GraspHyperScan/regressorObserver.mat'); % basic regressor
 cfg = HyperTaskModel(cfg);
 tosave = cfg.dL2;
-save(sprintf('%s/%s/dL2.mat',cfg.dataroot,cfg.subject),'tosave'); % in case you would want them beforehand
+save(sprintf('%s/%s/%s/dL2.mat',cfg.dataroot,cfg.dsampfolder,cfg.subject),'tosave'); % in case you would want them beforehand
 %% Masking
 for m = 1:length(cfg.masks)
+    disp(m)
     [dT,name] = MaskData(cfg.masks{m},cfg);
     save(sprintf('%s/%s_data4mm.mat',cfg.temppath,name),'dT','-v7.3');
 end
+exit;

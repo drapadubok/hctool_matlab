@@ -15,7 +15,7 @@ switch(analysis_type)
         load(sprintf('%s/%s/dL2.mat',cfg.dataroot,cfg.receiver));
         labels = tosave;
         data_actor = load(sprintf('%s/Tokens/%s/%s_4mm.mat',cfg.dataroot,cfg.token,cfg.sender)); data_actor = data_actor.dO;
-        data_observer = load(sprintf('%s/hyper/%s/%s/%s/data.mat',cfg.dataroot,cfg.token,cfg.sender,cfg.receiver)); data_observer = data_observer.fullmaskprojection;
+        data_observer = load(sprintf('%s/hyper/%s/%s/%s/data_%i.mat',cfg.dataroot,cfg.token,cfg.sender,cfg.receiver,cfg.K)); data_observer = data_observer.fullmaskprojection;
     case 'within'
         nperm = 10;
         cfg = HyperTaskModel(cfg);
@@ -32,7 +32,7 @@ switch(analysis_type)
         load(sprintf('%s/%s/dL2.mat',cfg.dataroot,cfg.receiver));
         labels = tosave;
         data_actor = load(sprintf('%s/Tokens/%s/%s_4mm.mat',cfg.dataroot,cfg.token,cfg.sender)); data_actor = data_actor.dO;
-        data_observer = load(sprintf('%s/hyper/%s/%s/%s/perms/dataPerm%i.mat',cfg.dataroot,cfg.token,cfg.sender,cfg.receiver,op)); data_observer = data_observer.fullmaskprojection;
+        data_observer = load(sprintf('%s/hyper/%s/%s/%s/perms_cca/dataPerm%i.mat',cfg.dataroot,cfg.token,cfg.sender,cfg.receiver,op)); data_observer = data_observer.fullmaskprojection;
 end
 
 %% Permutation, can a randomly trained classifier distinguish between our classes well enough
@@ -52,7 +52,7 @@ for p = 1:nperm
             f = ft_mv_blogreg('scale', cfg.lambda);
             % prepare data
             % category of interest is always 1, other are always 2
-            if strcmp(analysis_type,'between')||strcmp(analysis_type,'hyper')
+            if strcmp(analysis_type,'between')||strcmp(analysis_type,'hyper')||strcmp(analysis_type,'hyper_cca')
                 [x,xt,y,~] = HypercvLabelSet(permlabels(:,p),data_actor,data_observer,c,cv,n_per_run);
             else
                 [x,xt,y,~] = cvLabelSet(permlabels(:,p),data,c,cv,n_per_run);
@@ -75,7 +75,9 @@ end
 if strcmp(analysis_type,'between')||strcmp(analysis_type,'hyper')
     save(sprintf('%s/%s/%s/%s/%s/perms/%i.mat',cfg.dataroot,analysis_type,cfg.token,cfg.sender,cfg.receiver,op),'rate','permlabels','-v7.3');
 elseif strcmp(analysis_type,'hyper_cca')
-    save(sprintf('%s/%s/%s/%s/%s/perms_cca/%i.mat',cfg.dataroot,analysis_type,cfg.token,cfg.sender,cfg.receiver,op),'rate','permlabels','-v7.3');    
+    save(sprintf('%s/hyper/%s/%s/%s/perms_cca/%i.mat',cfg.dataroot,cfg.token,cfg.sender,cfg.receiver,op),'rate','permlabels','-v7.3');
+    delete(sprintf('%s/hyper/%s/%s/%s/perms_cca/dataPerm%i.mat',cfg.dataroot,cfg.token,cfg.sender,cfg.receiver,op));
 else    
     save(sprintf('%s/within/%s/%s/perms/%i.mat',cfg.dataroot,name,cfg.subject,op),'rate','permlabels','-v7.3');
 end
+exit;

@@ -11,8 +11,7 @@ suppressPackageStartupMessages(library(R.utils,lib.loc = userlibpath))
 suppressPackageStartupMessages(library(bitops,lib.loc = userlibpath))
 suppressPackageStartupMessages(library(rmatio,lib.loc = userlibpath))
 suppressPackageStartupMessages(library(oro.nifti,lib.loc = userlibpath))
-# ----- parameters -----
-# ORDER IS CRUCIAL, eg
+# ----- parameters -----# 
 #1 convthresh     0.6
 #2 nruns          4                                                                           
 #3 ntask          4                                                                           
@@ -35,20 +34,23 @@ if (!interactive()){
   cfgpath <- '/triton/becs/scratch/braindata/shared/GraspHyperScan/hyper/MOTOR/Sonya_Actor/Sonya_Observer/permcfg_cca.mat'
 }
 params <- readMat(cfgpath,header=FALSE)$cfg
-K <- as.numeric(params[5])
-cvs <- 1:as.numeric(params[2])
-dataroot <- as.character(params[8])
-partoken <- as.character(params[10])
-clsdata <- as.character(params[11])
-obsdata <- as.character(params[12])
-dsampfolder <- as.character(params[7])
+cfg_frame = data.frame(params)[[1]] # hack to make it into key:value
+# Unpack parameters
+K <- as.numeric(cfg_frame$K)
+cvs <- 1:as.numeric(cfg_frame$nruns)
+dataroot <- as.character(cfg_frame$dataroot)
+partoken <- as.character(cfg_frame$token)
+clsdata <- as.character(cfg_frame$sender)
+obsdata <- as.character(cfg_frame$receiver)
+dsampfolder <- as.character(cfg_frame$dsampfolder)
+
 ## load data
 dobs <- readMat(sprintf('%s/Tokens/%s/%s_4mm.mat',dataroot,partoken,obsdata))$dO
 dcls <- readMat(sprintf('%s/Tokens/%s/%s_4mm.mat',dataroot,partoken,clsdata))$dO
 labels_num <- readMat(sprintf('%s/%s/dL2.mat',dataroot,obsdata))$tosave
 # assuming all five runs in datasets
 n <- length(labels_num)
-n_per_run <- n/as.numeric(params[2])
+n_per_run <- n/as.numeric(cfg_frame$ntask)
 ind_lab <- labels_num != 0
 # make empty matrix
 fullmaskprojection <- matrix(0,nrow = dim(dcls)[1],ncol = dim(dcls)[2])
@@ -77,7 +79,7 @@ writeMat(sprintf('%s/hyper/%s/%s/%s/perms_cca/dataPerm%i.mat',dataroot,partoken,
 # Call matlab, its tricky here
 setwd('/triton/becs/scratch/braindata/shared/toolboxes/hyperclassification-tools')
 p1 <- 'matlab -nosplash -nodisplay -nojvm -nodesktop -r '
-p2 <- sprintf("mvlaPermutation('%s',%i,'hyper_cca',%i",cfgpath,as.numeric(shuffle_group),as.numeric(op))
+p2 <- sprintf("mvlaPermutation('%s',%i,'hyper_cca',%i)",cfgpath,as.numeric(shuffle_group),as.numeric(op))
 syscall <- paste(p1,'"',p2,'"',sep="")
 system(syscall)
 ####

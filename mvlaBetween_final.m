@@ -73,3 +73,4 @@ end
 % save outputs for picture
 retval.probs = probs;
 save(sprintf('%s/between/%s/%s/%s/results.mat',cfg.dataroot,cfg.token,cfg.sender,cfg.receiver),'retval','-v7.3');
+exit;
